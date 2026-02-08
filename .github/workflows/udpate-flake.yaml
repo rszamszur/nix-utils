@@ -1,0 +1,28 @@
+name: Update flake
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '0 0 * * 0'
+
+jobs:
+  lockfile:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+      - name: Install Nix
+        uses: DeterminateSystems/nix-installer-action@v21
+      - name: Update flake.lock
+        uses: DeterminateSystems/update-flake-lock@v28
+        with:
+          pr-title: "Update flake.lock"
+          pr-assignees: rszamszur
+          commit-msg: "chore: updates flake.lock"
+          token: ${{ secrets.API_GITHUB_TOKEN }}
+          pr-labels: |
+            dependencies
+          pr-body: |
+            Automated changes by the [update-flake-lock](https://github.com/DeterminateSystems/update-flake-lock) GitHub Action.
+            ```
+            {{ env.GIT_COMMIT_MESSAGE }}
+            ```
